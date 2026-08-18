@@ -119,11 +119,81 @@ Alert blocks will be processed using standard GitHub/Mintlify syntax:
 
 ---
 
-## 5. API Contracts (Backend Node/Express)
+## 5. Authentication & Session Management
+
+To support secure deployments and multi-user tracking (especially when editing files), the wiki application integrates authentication:
+
+1. **GitHub OAuth Flow**:
+   - The user clicks "Sign in with GitHub".
+   - Frontend redirects the user to the GitHub authorization page.
+   - Upon success, GitHub redirects the user back to the backend callback endpoint `/api/auth/github/callback`.
+   - The backend requests a token from GitHub, retrieves the user's profile (username, email, avatar), and establishes a secure session using an encrypted `httpOnly` cookie.
+   - This authentication session is used to identify the user for Git commits in v1 (attributing edits to the correct author).
+
+2. **Firebase JWT Validation**:
+   - The backend validates Firebase Client ID Tokens sent in the `Authorization: Bearer <JWT>` header.
+   - The backend decodes the token and verifies it against Google's public JWK keys (`https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com`).
+   - Verified user credentials (uid, email) are attached to `req.user`.
+
+---
+
+## 6. API Contracts (Backend Node/Express)
 
 All endpoints return JSON responses.
 
-### 5.1 GET `/api/tree`
+### 6.1 Authentication Endpoints
+
+#### GET `/api/auth/github`
+Redirects the user to GitHub's OAuth login page.
+
+#### GET `/api/auth/github/callback?code=<code>`
+Handles the callback redirect from GitHub. Trades the OAuth code for an access token, stores the user session, and redirects to the frontend homepage.
+
+#### POST `/api/auth/firebase`
+Verifies a Firebase ID token sent in the body or Authorization header and starts a session.
+- **Request Body**:
+  ```json
+  {
+    "token": "<firebase_id_token>"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "user": {
+      "uid": "firebase-uid",
+      "email": "user@example.com"
+    }
+  }
+  ```
+
+#### GET `/api/auth/me`
+Retrieves the logged-in user profile, if authenticated.
+- **Response**:
+  ```json
+  {
+    "authenticated": true,
+    "user": {
+      "username": "github-username",
+      "email": "user@example.com",
+      "avatar": "https://avatar-url..."
+    }
+  }
+  ```
+
+#### POST `/api/auth/logout`
+Destroys the current authenticated session.
+- **Response**:
+  ```json
+  {
+    "success": true
+  }
+  ```
+
+### 6.2 Documentation Endpoints
+
+#### GET `/api/tree`
 Returns the hierarchical tree structure of the markdown files inside the `docs/` repository.
 - **Response**:
   ```json
@@ -148,7 +218,7 @@ Returns the hierarchical tree structure of the markdown files inside the `docs/`
   ]
   ```
 
-### 5.2 GET `/api/doc?path=<relative_path>`
+#### GET `/api/doc?path=<relative_path>`
 Fetches the raw content and metadata of a specific markdown document.
 - **Response**:
   ```json
@@ -159,7 +229,7 @@ Fetches the raw content and metadata of a specific markdown document.
   }
   ```
 
-### 5.3 GET `/api/history?path=<relative_path>`
+#### GET `/api/history?path=<relative_path>`
 Fetches the Git commit log for a given file.
 - **Response**:
   ```json
@@ -173,7 +243,7 @@ Fetches the Git commit log for a given file.
   ]
   ```
 
-### 5.4 GET `/api/search?q=<query>`
+#### GET `/api/search?q=<query>`
 Performs a full-text search across all markdown files.
 - **Response**:
   ```json
@@ -186,7 +256,7 @@ Performs a full-text search across all markdown files.
   ]
   ```
 
-### 5.5 POST `/api/sync/pull`
+#### POST `/api/sync/pull`
 Triggers an immediate git pull in the `docs/` repository.
 - **Response**:
   ```json
