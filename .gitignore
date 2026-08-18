@@ -4,3 +4,4 @@ repo-cache/
 dist/
 .env
 docs/
+repo-cache/
