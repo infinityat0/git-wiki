@@ -36,6 +36,7 @@ Sequenced build plan tying together the ADRs and specs. Each milestone is indepe
 
 ## Cross-cutting (every milestone)
 - Tests per [features spec](../specs/wiki-features-specification.md) §14 (unit/integration/e2e/security regression).
+- **Markdown rendering**: fixture corpus + manifest already exist under `test/fixtures/markdown/`; wire the Vitest (L1/L2) + Playwright (L3) harness and the coverage guard in **M1** per [testing-markdown-rendering.md](../specs/testing-markdown-rendering.md). Every element built in M1 lands with its fixture assertions + light/dark baseline.
 - Accessibility (Design §8) and reduced-motion honored as components are built, not retrofitted.
 
 ## Open questions

@@ -1,0 +1,180 @@
+{
+  "$comment": "Source of truth mapping features-spec §3 elements to fixtures. The coverage-guard test (test/unit/render/coverage.test.ts) fails if any element here lacks a fixture, or if `visual: true` and no light+dark baseline exists. Add an entry when the spec element table grows.",
+  "specSection": "wiki-features-specification.md#3-markdown-element-specs",
+  "elements": [
+    {
+      "id": "headings",
+      "specLabel": "Headings (H1-H6)",
+      "fixture": "headings.md",
+      "visual": true,
+      "assertions": [
+        "renders h1 through h6",
+        "h1 and h2 have a bottom border",
+        "h2/h3 receive slug ids (rehype-slug)",
+        "hovering h2/h3 reveals an anchor '#' link"
+      ]
+    },
+    {
+      "id": "paragraphs",
+      "specLabel": "Paragraphs",
+      "fixture": "paragraphs.md",
+      "visual": true,
+      "assertions": ["line-height 1.75", "top/bottom margins between blocks"]
+    },
+    {
+      "id": "text-formatting",
+      "specLabel": "Bold & Italic",
+      "fixture": "text-formatting.md",
+      "visual": true,
+      "assertions": ["strong renders bold", "em renders italic", "gfm strikethrough renders del"]
+    },
+    {
+      "id": "unordered-lists",
+      "specLabel": "Unordered Lists",
+      "fixture": "lists.md",
+      "visual": true,
+      "assertions": ["custom bullets", "nested indentation", "gfm task-list checkboxes render disabled"]
+    },
+    {
+      "id": "ordered-lists",
+      "specLabel": "Ordered Lists",
+      "fixture": "lists.md",
+      "visual": true,
+      "assertions": ["auto-incrementing numbers", "custom number styling"]
+    },
+    {
+      "id": "inline-code",
+      "specLabel": "Inline Code",
+      "fixture": "inline-code.md",
+      "visual": true,
+      "assertions": ["monospace font", "tinted background", "0.25rem border-radius"]
+    },
+    {
+      "id": "code-blocks",
+      "specLabel": "Code Blocks",
+      "fixture": "code-blocks.md",
+      "visual": true,
+      "assertions": [
+        "syntax highlighted",
+        "language tag shown (e.g. TypeScript, Shell)",
+        "copy button present",
+        "always dark background"
+      ]
+    },
+    {
+      "id": "tables",
+      "specLabel": "Tables",
+      "fixture": "tables.md",
+      "visual": true,
+      "assertions": ["zebra striping on even rows", "column alignment honored", "horizontal borders only"]
+    },
+    {
+      "id": "blockquotes",
+      "specLabel": "Blockquotes",
+      "fixture": "blockquotes.md",
+      "visual": true,
+      "assertions": ["4px brand-green left border", "italicized text"]
+    },
+    {
+      "id": "images",
+      "specLabel": "Images",
+      "fixture": "images.md",
+      "visual": true,
+      "assertions": [
+        "centered, max-width 100%, rounded corners",
+        "relative src resolves via /api/asset",
+        "caption rendered in small italic text"
+      ]
+    },
+    {
+      "id": "callouts",
+      "specLabel": "Alerts / Callouts",
+      "fixture": "callouts.md",
+      "visual": true,
+      "assertions": [
+        "NOTE=blue, TIP=green, WARNING=amber, CAUTION=red",
+        "left border + tinted background + icon + title",
+        "correct tints in both light and dark"
+      ]
+    },
+    {
+      "id": "iframes",
+      "specLabel": "Embedded iframes",
+      "fixture": "iframes.md",
+      "visual": true,
+      "assertions": [
+        "allowlisted host renders a live iframe",
+        "iframe has forced sandbox attribute",
+        "iframe has loading=lazy",
+        "wrapped in responsive 16:9 container"
+      ]
+    },
+    {
+      "id": "mermaid",
+      "specLabel": "Diagrams (Mermaid)",
+      "fixture": "mermaid.md",
+      "visual": true,
+      "assertions": ["```mermaid fence renders inline SVG", "theme matches light/dark", "centered, max-width 100%"]
+    },
+    {
+      "id": "math",
+      "specLabel": "Math (KaTeX)",
+      "fixture": "math.md",
+      "visual": true,
+      "assertions": ["inline $..$ renders", "block $$..$$ renders centered", "no runtime script (CSS-only KaTeX)"]
+    },
+    {
+      "id": "internal-links",
+      "specLabel": "Internal links & broken links (§8)",
+      "fixture": "internal-links.md",
+      "visual": false,
+      "assertions": [
+        "relative .md link rewritten to an SPA route",
+        "heading anchor (#slug) preserved",
+        "link to a nonexistent doc gets a broken-link affordance"
+      ]
+    },
+    {
+      "id": "frontmatter",
+      "specLabel": "Frontmatter title/order (§7)",
+      "fixture": "frontmatter.md",
+      "visual": false,
+      "assertions": [
+        "frontmatter block is not rendered into the body",
+        "title claim used as the document/sidebar label, not the filename"
+      ]
+    }
+  ],
+  "security": [
+    {
+      "id": "script-tag",
+      "fixture": "security/script-tag.md",
+      "expectBlocked": "no <script> element exists in the rendered output"
+    },
+    {
+      "id": "event-handler-attr",
+      "fixture": "security/event-handler-attr.md",
+      "expectBlocked": "no onclick/on* attributes survive on any rendered element"
+    },
+    {
+      "id": "javascript-url",
+      "fixture": "security/javascript-url.md",
+      "expectBlocked": "no href/src begins with javascript:"
+    },
+    {
+      "id": "iframe-disallowed-host",
+      "fixture": "security/iframe-disallowed-host.md",
+      "expectBlocked": "no live <iframe> to a non-allowlisted host; a placeholder card is rendered instead"
+    },
+    {
+      "id": "iframe-srcdoc",
+      "fixture": "security/iframe-srcdoc.md",
+      "expectBlocked": "iframe with srcdoc is dropped entirely"
+    },
+    {
+      "id": "iframe-missing-sandbox",
+      "fixture": "security/iframe-missing-sandbox.md",
+      "expectBlocked": "rendered iframe carries the forced sandbox value even though the source omitted it"
+    }
+  ]
+}

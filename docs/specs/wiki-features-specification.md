@@ -378,7 +378,9 @@ Authentication (§5) establishes *who*; authorization establishes *what they may
 
 ## 14. Testing Strategy (summary)
 
-See the dedicated testing plan for detail; at minimum:
+**Markdown rendering** has a dedicated contract: [testing-markdown-rendering.md](testing-markdown-rendering.md). A single fixture corpus (`test/fixtures/markdown/`) plus a manifest drive three levels — Vitest DOM assertions, golden HTML snapshots, and Playwright light/dark visual regression — and a **coverage guard** fails CI if any §3 element lacks a fixture/baseline, so new elements are tested against the standard set by construction.
+
+Beyond rendering, at minimum:
 - **Unit**: markdown pipeline (callouts, iframe sanitization allow/deny, mermaid/math), path-traversal validation, frontmatter parsing/ordering.
 - **Integration**: each API endpoint incl. the **dev-auth production guardrail** (must 403 under `NODE_ENV=production`), sync success/failure, search index build.
 - **E2E**: read flow (tree → doc → TOC → search), sign-in via dev account, and v1 edit → commit → conflict path.
