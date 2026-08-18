@@ -1,7 +1,9 @@
 node_modules/
-repo-cache/
-.DS_Store
 dist/
+.DS_Store
 .env
-docs/
+
+# Docs *content* to render is a separate repo, cloned here at runtime — never commit it.
 repo-cache/
+
+# NOTE: docs/ (our ADRs, specs, designs, plans) IS tracked — do not ignore it.
