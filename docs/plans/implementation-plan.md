@@ -2,6 +2,8 @@
 
 Sequenced build plan tying together the ADRs and specs. Each milestone is independently shippable and testable.
 
+> **Parallel execution:** the milestones below are broken into tightly-scoped, offloadable task cards in [tasks/](tasks/). Build the Foundations (`F1–F8`) first — they freeze the shared contracts — then fan `B*`/`R*`/`U*` out to separate agents. See [tasks/README.md](tasks/README.md) for the dependency graph, the shared Definition of Done, and the agent handoff template.
+
 ## M0 — Scaffold & config
 - Vite + React + TS frontend; Express + TS backend in one repo; single-image build ([ADR-0001](../adrs/0001-architecture-overview.md)).
 - Config loader + startup validation and `.env.example` ([configuration.md](../specs/configuration.md)).
