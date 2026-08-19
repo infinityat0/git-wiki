@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`headings — L2 golden snapshot > rendered HTML is stable 1`] = `
+"<div><h1 id="heading-level-1">Heading Level 1</h1>
+<p>Intro paragraph under the H1 to verify spacing and the bottom border on H1.</p>
+<h2 id="heading-level-2">Heading Level 2</h2>
+<p>Text under an H2 (H2 also has a bottom border and a slug id for anchor links).</p>
+<h3 id="heading-level-3">Heading Level 3</h3>
+<p>Text under an H3 (H3 gets a slug id and hover anchor).</p>
+<h4 id="heading-level-4">Heading Level 4</h4>
+<h5 id="heading-level-5">Heading Level 5</h5>
+<h6 id="heading-level-6">Heading Level 6</h6>
+<h2 id="duplicate-title">Duplicate Title</h2>
+<h2 id="duplicate-title-1">Duplicate Title</h2>
+<p>Two identical H2s above verify that slug ids are de-duplicated (e.g. <code>duplicate-title</code>, <code>duplicate-title-1</code>).</p></div>"
+`;

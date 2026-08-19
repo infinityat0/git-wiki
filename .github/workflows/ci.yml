@@ -34,13 +34,31 @@ jobs:
       - name: Build
         run: npm run build
 
-  e2e:
-    name: Playwright E2E (stub)
+  visual:
+    name: Playwright L3 (visual regression)
     runs-on: ubuntu-latest
+    # Run inside the SAME pinned Playwright image the baselines were generated
+    # with, so font rasterization matches the committed screenshots exactly.
+    # Keep this tag in lockstep with the pinned @playwright/test version.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
     steps:
       - uses: actions/checkout@v4
-      # Stubbed: task F8 wires up Playwright (browser install, `playwright test`,
-      # and diff-artifact upload on failure). Kept as a separate job so the
-      # pipeline shape is already in place.
-      - name: Placeholder
-        run: echo "Playwright E2E is stubbed — F8 implements this job."
+
+      - name: Install
+        run: npm ci
+
+      - name: Playwright visual tests
+        # The config's webServer boots the Vite harness; baselines under
+        # test/visual/__screenshots__ are diffed here (never auto-updated).
+        run: npx playwright test
+
+      - name: Upload diff artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
