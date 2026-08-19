@@ -116,7 +116,9 @@ function validateInput(userPath: unknown): string {
   const segments = unified.split('/');
   for (const segment of segments) {
     if (segment === '..') {
-      throw new ValidationError('parent-directory ("..") segments are not allowed');
+      throw new ValidationError(
+        'parent-directory ("..") segments are not allowed',
+      );
     }
     if (EXCLUDED_SEGMENTS.includes(segment.toLowerCase())) {
       throw new ValidationError('".git" paths are not allowed');

@@ -8,7 +8,9 @@ import type { HistoryResponse } from '@wiki/contracts';
 import { apiClient } from '../api/client';
 import { queryKeys } from './queryKeys';
 
-export function useHistory(path: string): UseQueryResult<HistoryResponse, unknown> {
+export function useHistory(
+  path: string,
+): UseQueryResult<HistoryResponse, unknown> {
   return useQuery({
     queryKey: queryKeys.history(path),
     queryFn: ({ signal }) => apiClient.getHistory(path, signal),

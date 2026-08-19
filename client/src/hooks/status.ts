@@ -9,7 +9,11 @@
 
 import type { UseQueryResult } from '@tanstack/react-query';
 import { ApiClientError } from '../api/errors';
-import type { HistoryResponse, SearchResponse, TreeResponse } from '@wiki/contracts';
+import type {
+  HistoryResponse,
+  SearchResponse,
+  TreeResponse,
+} from '@wiki/contracts';
 
 /** The mutually-exclusive display state of an async surface. */
 export type AsyncState = 'loading' | 'empty' | 'error' | 'ready';

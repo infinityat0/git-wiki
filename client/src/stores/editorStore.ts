@@ -60,7 +60,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       const buffer = s.buffers[path];
       if (!buffer) return s;
       return {
-        buffers: { ...s.buffers, [path]: { ...buffer, baseline: buffer.draft } },
+        buffers: {
+          ...s.buffers,
+          [path]: { ...buffer, baseline: buffer.draft },
+        },
       };
     }),
   closeBuffer: (path) =>

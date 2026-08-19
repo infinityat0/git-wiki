@@ -12,7 +12,8 @@ function validProdEnv(overrides: RawEnv = {}): RawEnv {
     SSO_AUDIENCE: 'wiki.example.test',
     DOCS_REPO_URL: 'https://github.com/acme/docs.git',
     DOCS_GIT_APP_ID: '12345',
-    DOCS_GIT_APP_PRIVATE_KEY: '-----BEGIN PRIVATE KEY-----\nx\n-----END PRIVATE KEY-----',
+    DOCS_GIT_APP_PRIVATE_KEY:
+      '-----BEGIN PRIVATE KEY-----\nx\n-----END PRIVATE KEY-----',
     DOCS_GIT_APP_INSTALLATION_ID: '67890',
     ...overrides,
   };
@@ -51,7 +52,9 @@ describe('loadConfig — defaults (development)', () => {
 
 describe('loadConfig — fail-fast in production', () => {
   it('refuses to start when required secrets are missing', () => {
-    expect(() => loadConfig({ NODE_ENV: 'production' }, silentLogger)).toThrow(ConfigError);
+    expect(() => loadConfig({ NODE_ENV: 'production' }, silentLogger)).toThrow(
+      ConfigError,
+    );
   });
 
   it('names every missing required var in a clear message', () => {
@@ -92,9 +95,9 @@ describe('loadConfig — fail-fast in production', () => {
   });
 
   it('treats blank/whitespace-only values as missing', () => {
-    expect(() => loadConfig(validProdEnv({ SSO_ISSUER: '   ' }), silentLogger)).toThrow(
-      /SSO_ISSUER/,
-    );
+    expect(() =>
+      loadConfig(validProdEnv({ SSO_ISSUER: '   ' }), silentLogger),
+    ).toThrow(/SSO_ISSUER/);
   });
 
   it('loads successfully when all required secrets are present', () => {
@@ -121,7 +124,10 @@ describe('dev-auth guardrail (security spec §4)', () => {
   });
 
   it('honours AUTH_DEV_MODE=true in development', () => {
-    const c = loadConfig({ NODE_ENV: 'development', AUTH_DEV_MODE: 'true' }, silentLogger);
+    const c = loadConfig(
+      { NODE_ENV: 'development', AUTH_DEV_MODE: 'true' },
+      silentLogger,
+    );
     expect(c.authDevMode).toBe(true);
   });
 });
@@ -133,16 +139,24 @@ describe('loadConfig — parsing', () => {
   });
 
   it('rejects an invalid READ_ACCESS value', () => {
-    expect(() => loadConfig({ READ_ACCESS: 'EVERYONE' }, silentLogger)).toThrow(/READ_ACCESS/);
+    expect(() => loadConfig({ READ_ACCESS: 'EVERYONE' }, silentLogger)).toThrow(
+      /READ_ACCESS/,
+    );
   });
 
   it('parses SYNC_POLL_INTERVAL=0 (polling disabled)', () => {
-    expect(loadConfig({ SYNC_POLL_INTERVAL: '0' }, silentLogger).docs.syncPollInterval).toBe(0);
+    expect(
+      loadConfig({ SYNC_POLL_INTERVAL: '0' }, silentLogger).docs
+        .syncPollInterval,
+    ).toBe(0);
   });
 
   it('parses EDIT_ALLOWLIST and IFRAME_ALLOWED_HOSTS as trimmed lists', () => {
     const c = loadConfig(
-      { EDIT_ALLOWLIST: 'a@x.com, b@x.com , ', IFRAME_ALLOWED_HOSTS: 'a.com,b.com' },
+      {
+        EDIT_ALLOWLIST: 'a@x.com, b@x.com , ',
+        IFRAME_ALLOWED_HOSTS: 'a.com,b.com',
+      },
       silentLogger,
     );
     expect(c.editAllowlist).toEqual(['a@x.com', 'b@x.com']);

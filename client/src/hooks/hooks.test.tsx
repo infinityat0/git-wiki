@@ -39,7 +39,10 @@ describe('useTree', () => {
     const tree: TreeResponse = [
       { name: 'a.md', path: 'a.md', title: 'A', type: 'file' },
     ];
-    vi.stubGlobal('fetch', vi.fn(async () => json(200, tree)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => json(200, tree)),
+    );
 
     const { result } = renderHook(() => useTree(), {
       wrapper: wrapper(testClient()),
@@ -52,7 +55,9 @@ describe('useTree', () => {
   it('surfaces an ApiClientError on failure', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => json(500, { error: { code: 'INTERNAL', message: 'boom' } })),
+      vi.fn(async () =>
+        json(500, { error: { code: 'INTERNAL', message: 'boom' } }),
+      ),
     );
 
     const { result } = renderHook(() => useTree(), {
@@ -60,7 +65,10 @@ describe('useTree', () => {
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
-    expect(result.current.error).toMatchObject({ code: 'INTERNAL', status: 500 });
+    expect(result.current.error).toMatchObject({
+      code: 'INTERNAL',
+      status: 500,
+    });
   });
 });
 
@@ -89,7 +97,9 @@ describe('useSync', () => {
     const client = testClient();
     const invalidateSpy = vi.spyOn(client, 'invalidateQueries');
 
-    const { result } = renderHook(() => useSync(), { wrapper: wrapper(client) });
+    const { result } = renderHook(() => useSync(), {
+      wrapper: wrapper(client),
+    });
     result.current.mutate();
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -104,9 +114,17 @@ describe('useHydrateAuth', () => {
   it('pushes the fetched session into the auth store', async () => {
     const authMe: AuthMe = {
       authenticated: true,
-      user: { name: 'Eng', email: 'e@x.com', provider: 'github', canWrite: true },
+      user: {
+        name: 'Eng',
+        email: 'e@x.com',
+        provider: 'github',
+        canWrite: true,
+      },
     };
-    vi.stubGlobal('fetch', vi.fn(async () => json(200, authMe)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => json(200, authMe)),
+    );
 
     renderHook(() => useHydrateAuth(), { wrapper: wrapper(testClient()) });
 

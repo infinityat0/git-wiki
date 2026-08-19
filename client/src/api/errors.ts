@@ -17,7 +17,8 @@ const FALLBACK_CODE: ErrorCode = 'INTERNAL';
 /** Narrow an arbitrary value to a known {@link ErrorCode}. */
 function isErrorCode(value: unknown): value is ErrorCode {
   return (
-    typeof value === 'string' && (ERROR_CODES as readonly string[]).includes(value)
+    typeof value === 'string' &&
+    (ERROR_CODES as readonly string[]).includes(value)
   );
 }
 

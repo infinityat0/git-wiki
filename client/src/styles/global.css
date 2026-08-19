@@ -4,10 +4,8 @@
  * Applies the design tokens to the document, sets long-form reading defaults,
  * the global accessibility focus ring (Design.md §8), the reduced-motion
  * escape hatch (§4.3), and print rules (§9). Zone-specific styling lives with
- * the U*/R* tasks that own each zone — keep this file to document-wide concerns.
- */
-
-*,
+ * the U*/
+R* tasks that own each zone — keep this file to document-wide concerns. */ *,
 *::before,
 *::after {
   box-sizing: border-box;

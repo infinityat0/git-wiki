@@ -43,7 +43,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Follow OS changes only while the user hasn't made an explicit choice.
   useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    if (
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    ) {
       return;
     }
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -62,5 +65,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     [theme, setTheme, toggle],
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 }

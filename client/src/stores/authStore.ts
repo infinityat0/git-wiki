@@ -34,7 +34,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 
 /** The current session user, or `null`. */
-export const useAuthUser = (): SessionUser | null => useAuthStore((s) => s.user);
+export const useAuthUser = (): SessionUser | null =>
+  useAuthStore((s) => s.user);
 
 /** Whether the current user may write (edit affordance gate; features spec §12). */
 export const useCanWrite = (): boolean =>

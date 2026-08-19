@@ -4,7 +4,8 @@
  * These are the single source of truth for colors, typography, and spacing.
  * Values are transcribed EXACTLY from docs/designs/Design.md §1. Do not edit
  * the palette here without updating the design doc (this file is owned by F5
- * and consumed read-only by every U*/R* task).
+ * and consumed read-only by every U*/
+R* task).
  *
  * The dark theme is activated by the `.dark` class on <html>, applied by the
  * theme provider (client/src/theme) before first paint.
@@ -30,7 +31,11 @@
 
   --code-bg: hsl(210, 16%, 96%);
   --code-text: hsl(340, 70%, 45%); /* Muted pink for inline code */
-  --code-block-bg: hsl(215, 21%, 11%); /* Always dark code block for high readability */
+  --code-block-bg: hsl(
+    215,
+    21%,
+    11%
+  ); /* Always dark code block for high readability */
 
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md:

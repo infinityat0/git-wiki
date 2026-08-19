@@ -40,7 +40,10 @@ export function storeTheme(theme: Theme): void {
 
 /** True when the OS prefers dark. Safe under SSR / jsdom (no matchMedia). */
 export function systemPrefersDark(): boolean {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.matchMedia !== 'function'
+  ) {
     return false;
   }
   return window.matchMedia('(prefers-color-scheme: dark)').matches;

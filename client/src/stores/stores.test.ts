@@ -28,7 +28,9 @@ describe('authStore', () => {
   });
 
   it('clear() drops the session', () => {
-    useAuthStore.getState().setFromAuthMe({ authenticated: true, user: writer });
+    useAuthStore
+      .getState()
+      .setFromAuthMe({ authenticated: true, user: writer });
     useAuthStore.getState().clear();
     expect(useAuthStore.getState().authenticated).toBe(false);
     expect(useAuthStore.getState().user).toBeNull();

@@ -19,7 +19,10 @@ export function readString(env: RawEnv, key: string): string | undefined {
  * Parses a boolean. Accepts (case-insensitively) `true/1/yes/on` as true and
  * `false/0/no/off` as false. Unset → `fallback`. Any other value throws.
  */
-export function parseBool(value: string | undefined, fallback: boolean): boolean {
+export function parseBool(
+  value: string | undefined,
+  fallback: boolean,
+): boolean {
   if (value === undefined) return fallback;
   const v = value.trim().toLowerCase();
   if (['true', '1', 'yes', 'on'].includes(v)) return true;
@@ -48,7 +51,10 @@ export function parseInteger(
 }
 
 /** Splits a comma-separated list, trimming and dropping empty entries. */
-export function parseList(value: string | undefined, fallback: string[]): string[] {
+export function parseList(
+  value: string | undefined,
+  fallback: string[],
+): string[] {
   if (value === undefined) return fallback;
   return value
     .split(',')

@@ -11,7 +11,12 @@ import { QueryClient } from '@tanstack/react-query';
 import { ApiClientError } from './errors';
 
 /** Error codes that must never be retried (retrying cannot change the outcome). */
-const NON_RETRYABLE = new Set(['NOT_FOUND', 'UNAUTHORIZED', 'FORBIDDEN', 'VALIDATION']);
+const NON_RETRYABLE = new Set([
+  'NOT_FOUND',
+  'UNAUTHORIZED',
+  'FORBIDDEN',
+  'VALIDATION',
+]);
 
 /** Build a {@link QueryClient} with the wiki's shared defaults. */
 export function createQueryClient(): QueryClient {
@@ -22,7 +27,10 @@ export function createQueryClient(): QueryClient {
         staleTime: 30_000,
         refetchOnWindowFocus: false,
         retry: (failureCount, error) => {
-          if (error instanceof ApiClientError && NON_RETRYABLE.has(error.code)) {
+          if (
+            error instanceof ApiClientError &&
+            NON_RETRYABLE.has(error.code)
+          ) {
             return false;
           }
           return failureCount < 2;

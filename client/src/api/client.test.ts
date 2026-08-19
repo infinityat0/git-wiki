@@ -6,11 +6,12 @@ import { ApiClientError } from './errors';
 
 /** Build a stub `fetch` that resolves with the given status + JSON body. */
 function stubFetch(status: number, body: unknown): FetchLike {
-  return vi.fn(async () =>
-    new Response(body === undefined ? '' : JSON.stringify(body), {
-      status,
-      headers: { 'Content-Type': 'application/json' },
-    }),
+  return vi.fn(
+    async () =>
+      new Response(body === undefined ? '' : JSON.stringify(body), {
+        status,
+        headers: { 'Content-Type': 'application/json' },
+      }),
   );
 }
 

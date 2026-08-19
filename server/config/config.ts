@@ -125,7 +125,10 @@ const SSO_DEFAULTS = {
  * @param logger Warning sink (defaults to `console`).
  * @throws {ConfigError} in production when a required value is missing/invalid.
  */
-export function loadConfig(env: RawEnv = process.env, logger: Logger = console): Config {
+export function loadConfig(
+  env: RawEnv = process.env,
+  logger: Logger = console,
+): Config {
   const problems: string[] = [];
   const nodeEnv = readString(env, 'NODE_ENV') ?? 'development';
   const isProduction = nodeEnv === 'production';
@@ -146,7 +149,10 @@ export function loadConfig(env: RawEnv = process.env, logger: Logger = console):
    * `devDefault` (which may be `undefined`); in production a missing value is a
    * hard error.
    */
-  const requiredInProd = (key: string, devDefault?: string): string | undefined => {
+  const requiredInProd = (
+    key: string,
+    devDefault?: string,
+  ): string | undefined => {
     const value = readString(env, key);
     if (value !== undefined) return value;
     if (isProduction) {
@@ -156,15 +162,28 @@ export function loadConfig(env: RawEnv = process.env, logger: Logger = console):
     return devDefault;
   };
 
-  const port = guard('PORT', () => parseInteger(env.PORT, 3000, { min: 0 }), 3000);
+  const port = guard(
+    'PORT',
+    () => parseInteger(env.PORT, 3000, { min: 0 }),
+    3000,
+  );
   const readAccess = guard(
     'READ_ACCESS',
-    () => parseEnum(readString(env, 'READ_ACCESS'), ['PUBLIC', 'AUTHENTICATED'] as const, 'AUTHENTICATED'),
+    () =>
+      parseEnum(
+        readString(env, 'READ_ACCESS'),
+        ['PUBLIC', 'AUTHENTICATED'] as const,
+        'AUTHENTICATED',
+      ),
     'AUTHENTICATED',
   );
 
   // Dev-auth guardrail: AUTH_DEV_MODE is honoured only outside production.
-  const rawAuthDevMode = guard('AUTH_DEV_MODE', () => parseBool(env.AUTH_DEV_MODE, false), false);
+  const rawAuthDevMode = guard(
+    'AUTH_DEV_MODE',
+    () => parseBool(env.AUTH_DEV_MODE, false),
+    false,
+  );
   let authDevMode = rawAuthDevMode;
   if (isProduction && rawAuthDevMode) {
     logger.warn(
@@ -190,11 +209,20 @@ export function loadConfig(env: RawEnv = process.env, logger: Logger = console):
     readAccess,
     sso: {
       // Required in production; documented prod defaults used only in dev/test.
-      jwksUrl: requiredInProd('SSO_JWKS_URL', SSO_DEFAULTS.jwksUrl) ?? SSO_DEFAULTS.jwksUrl,
-      issuer: requiredInProd('SSO_ISSUER', SSO_DEFAULTS.issuer) ?? SSO_DEFAULTS.issuer,
-      audience: requiredInProd('SSO_AUDIENCE', SSO_DEFAULTS.audience) ?? SSO_DEFAULTS.audience,
-      sessionCookieName: readString(env, 'SESSION_COOKIE_NAME') ?? 'tapestry_session',
-      logoutUrl: readString(env, 'SSO_LOGOUT_URL') ?? 'https://sso.prod.tapestry.app/logout',
+      jwksUrl:
+        requiredInProd('SSO_JWKS_URL', SSO_DEFAULTS.jwksUrl) ??
+        SSO_DEFAULTS.jwksUrl,
+      issuer:
+        requiredInProd('SSO_ISSUER', SSO_DEFAULTS.issuer) ??
+        SSO_DEFAULTS.issuer,
+      audience:
+        requiredInProd('SSO_AUDIENCE', SSO_DEFAULTS.audience) ??
+        SSO_DEFAULTS.audience,
+      sessionCookieName:
+        readString(env, 'SESSION_COOKIE_NAME') ?? 'tapestry_session',
+      logoutUrl:
+        readString(env, 'SSO_LOGOUT_URL') ??
+        'https://sso.prod.tapestry.app/logout',
     },
     docs: {
       repoUrl: requiredInProd('DOCS_REPO_URL'),
@@ -216,10 +244,11 @@ export function loadConfig(env: RawEnv = process.env, logger: Logger = console):
       name: readString(env, 'DEV_AUTH_NAME') ?? 'dev',
       email: readString(env, 'DEV_AUTH_EMAIL') ?? 'dev@localhost',
     },
-    iframeAllowedHosts: parseList(
-      readString(env, 'IFRAME_ALLOWED_HOSTS'),
-      ['youtube-nocookie.com', 'youtube.com', 'codesandbox.io'],
-    ),
+    iframeAllowedHosts: parseList(readString(env, 'IFRAME_ALLOWED_HOSTS'), [
+      'youtube-nocookie.com',
+      'youtube.com',
+      'codesandbox.io',
+    ]),
   };
 
   if (problems.length > 0) {

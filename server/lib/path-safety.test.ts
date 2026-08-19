@@ -26,7 +26,9 @@ let root: string; // the docs root (a subdir of workdir)
 let outsideSecret: string; // a file that lives OUTSIDE root
 
 beforeAll(() => {
-  workdir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'path-safety-')));
+  workdir = fs.realpathSync(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'path-safety-')),
+  );
   root = path.join(workdir, 'repo-cache');
 
   fs.mkdirSync(path.join(root, 'guides', 'nested'), { recursive: true });
@@ -51,7 +53,9 @@ afterAll(() => {
 
 describe('resolveInsideRoot — legitimate paths', () => {
   it('accepts a top-level doc', () => {
-    expect(resolveInsideRoot(root, 'index.md')).toBe(path.join(root, 'index.md'));
+    expect(resolveInsideRoot(root, 'index.md')).toBe(
+      path.join(root, 'index.md'),
+    );
   });
 
   it('accepts a nested doc', () => {
@@ -116,7 +120,9 @@ describe('resolveInsideRoot — traversal payloads are rejected', () => {
   }
 
   it('rejects the absolute path to the outside secret', () => {
-    expect(() => resolveInsideRoot(root, outsideSecret)).toThrow(ValidationError);
+    expect(() => resolveInsideRoot(root, outsideSecret)).toThrow(
+      ValidationError,
+    );
   });
 });
 
@@ -125,7 +131,9 @@ describe('resolveInsideRoot — symlink escape is rejected', () => {
     const link = path.join(root, 'escape-file.md');
     fs.symlinkSync(outsideSecret, link);
     try {
-      expect(() => resolveInsideRoot(root, 'escape-file.md')).toThrow(ValidationError);
+      expect(() => resolveInsideRoot(root, 'escape-file.md')).toThrow(
+        ValidationError,
+      );
     } finally {
       fs.rmSync(link, { force: true });
     }
@@ -136,9 +144,9 @@ describe('resolveInsideRoot — symlink escape is rejected', () => {
     fs.symlinkSync(workdir, linkDir); // points to the parent of root
     try {
       // escape-dir -> workdir, then /outside-secret.md is outside root.
-      expect(() => resolveInsideRoot(root, 'escape-dir/outside-secret.md')).toThrow(
-        ValidationError,
-      );
+      expect(() =>
+        resolveInsideRoot(root, 'escape-dir/outside-secret.md'),
+      ).toThrow(ValidationError);
     } finally {
       fs.rmSync(linkDir, { force: true });
     }
@@ -148,7 +156,9 @@ describe('resolveInsideRoot — symlink escape is rejected', () => {
     const link = path.join(root, 'alias.md');
     fs.symlinkSync(path.join(root, 'index.md'), link);
     try {
-      expect(resolveInsideRoot(root, 'alias.md')).toBe(path.join(root, 'index.md'));
+      expect(resolveInsideRoot(root, 'alias.md')).toBe(
+        path.join(root, 'index.md'),
+      );
     } finally {
       fs.rmSync(link, { force: true });
     }
@@ -161,9 +171,9 @@ describe('resolveInsideRoot — root handling', () => {
   });
 
   it('rejects a non-existent root', () => {
-    expect(() => resolveInsideRoot(path.join(workdir, 'nope'), 'index.md')).toThrow(
-      ValidationError,
-    );
+    expect(() =>
+      resolveInsideRoot(path.join(workdir, 'nope'), 'index.md'),
+    ).toThrow(ValidationError);
   });
 
   it('rejects an empty root', () => {
@@ -225,6 +235,14 @@ describe('isAsset', () => {
   });
 
   it('matches the documented allowlist', () => {
-    expect(ASSET_EXTENSIONS).toEqual(['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.pdf']);
+    expect(ASSET_EXTENSIONS).toEqual([
+      '.png',
+      '.jpg',
+      '.jpeg',
+      '.gif',
+      '.svg',
+      '.webp',
+      '.pdf',
+    ]);
   });
 });

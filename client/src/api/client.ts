@@ -82,7 +82,10 @@ export function createApiClient(
   // Late-bound so a reassigned/mocked global `fetch` is always respected.
   fetchImpl: FetchLike = (input, init) => fetch(input, init),
 ): ApiClient {
-  async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  async function request<T>(
+    path: string,
+    options: RequestOptions = {},
+  ): Promise<T> {
     const { method = 'GET', query, body, signal } = options;
     const init: RequestInit = {
       method,
@@ -111,11 +114,13 @@ export function createApiClient(
   }
 
   return {
-    getHealth: (signal) => request<HealthResponse>(API_ROUTES.health, { signal }),
+    getHealth: (signal) =>
+      request<HealthResponse>(API_ROUTES.health, { signal }),
     getAuthMe: (signal) => request<AuthMe>(API_ROUTES.authMe, { signal }),
     devLogin: (body) =>
       request<DevLoginResponse>(API_ROUTES.authDev, { method: 'POST', body }),
-    logout: () => request<LogoutResponse>(API_ROUTES.authLogout, { method: 'POST' }),
+    logout: () =>
+      request<LogoutResponse>(API_ROUTES.authLogout, { method: 'POST' }),
     getTree: (signal) => request<TreeResponse>(API_ROUTES.tree, { signal }),
     getDoc: (path, signal) =>
       request<DocResponse>(API_ROUTES.doc, { query: { path }, signal }),
@@ -123,7 +128,8 @@ export function createApiClient(
       request<HistoryResponse>(API_ROUTES.history, { query: { path }, signal }),
     search: (q, signal) =>
       request<SearchResponse>(API_ROUTES.search, { query: { q }, signal }),
-    syncPull: () => request<SyncResult>(API_ROUTES.syncPull, { method: 'POST' }),
+    syncPull: () =>
+      request<SyncResult>(API_ROUTES.syncPull, { method: 'POST' }),
   };
 }
 
