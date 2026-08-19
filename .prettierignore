@@ -1,0 +1,9 @@
+**/dist/**
+**/node_modules/**
+coverage/**
+package-lock.json
+
+# Authored content owned by other tasks — not formatted by this tooling.
+# Markdown test fixtures are intentional inputs and must stay byte-stable.
+docs/**
+test/**
