@@ -32,6 +32,7 @@ L1 catches "structurally wrong," L2 catches "silently changed," L3 catches "look
 - An `<iframe>` whose `src` host is not in `IFRAME_ALLOWED_HOSTS` renders as the placeholder card, **not** a live frame.
 - `<iframe srcdoc="…">` is rejected entirely.
 - An `<iframe>` authored without `sandbox` renders **with** the forced sandbox value.
+- **Mermaid injection** (`security/mermaid-injection.md`): because mermaid renders *after* sanitize, `securityLevel: 'strict'` must neutralize HTML labels, `click`/`callback` directives, and `%%{init}%%` security downgrades — the emitted SVG carries no `<script>`, `on*`, `<foreignObject>` HTML, or `javascript:` URL.
 
 Each security fixture entry in the manifest carries `expectBlocked` with the specific assertion. These run at L1 only (no visual baseline needed — the point is a node's absence).
 
@@ -59,6 +60,7 @@ test/
     security/
       script-tag.md  event-handler-attr.md  javascript-url.md
       iframe-disallowed-host.md  iframe-srcdoc.md  iframe-missing-sandbox.md
+      mermaid-injection.md
   unit/render/               # L1 + L2 (Vitest)
   visual/                    # L3 (Playwright) + __screenshots__ baselines
 ```

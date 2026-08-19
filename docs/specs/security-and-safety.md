@@ -30,6 +30,18 @@ Docs are authored in git but **rendered to every reader**, so treat rendered HTM
 - **Iframes**: allowed only with a forced `sandbox` (`allow-scripts allow-same-origin allow-popups`; no `allow-top-navigation`/`allow-forms` unless deliberately widened), `loading="lazy"`, and a **host allowlist** from `IFRAME_ALLOWED_HOSTS`. `srcdoc` is rejected. Non-allowlisted `src` renders a placeholder card, not a frame.
 - A **Content-Security-Policy** response header backstops the sanitizer: restrict `default-src`, set `frame-src` to the same iframe host allowlist, `script-src 'self'`, and disallow inline event handlers. CSP and the sanitizer allowlist must be kept in sync.
 
+### 3.1 Client-rendered diagrams (Mermaid) — a sanitize bypass
+
+A ` ```mermaid ` block passes through `rehype-sanitize` as inert text; the **mermaid library generates SVG in the browser, after the sanitize pass**. So the rehype allowlist does **not** protect diagrams — mermaid needs its own controls:
+- Initialize mermaid with **`securityLevel: 'strict'`** and **`htmlLabels: false`**. Never `'loose'`/`'antiscript'` downgrades. This config is a security control: changing it requires review + a test, like the sanitize allowlist.
+- **Disable interaction**: no `click` / `callback` directives (they can run JS or navigate), and ignore author-supplied `%%{init}%%` directives that would re-enable HTML labels, scripts, or a weaker security level.
+- **Sanitize the generated SVG** before insertion (mermaid's bundled DOMPurify at strict level, plus: the app never injects diagram output via `dangerouslySetInnerHTML` without that sanitize step).
+- **No `<foreignObject>` HTML** and no inline event handlers survive in the emitted SVG.
+- Any URL a diagram emits is subject to the same link-URL policy as markdown (no `javascript:`).
+- CSP note: strict mermaid needs no `script-src 'unsafe-eval'`; do **not** relax CSP for diagrams. Inline `style` inside the SVG is fine under a `style-src` that permits element styles, but no inline `<script>`.
+
+Regression tests: a mermaid source using an HTML label, a `click` handler, and an `%%{init}%%` security downgrade must all render safe SVG with no script execution and no navigation binding.
+
 ## 4. Authentication & session safety
 
 Authentication is delegated to the SSO app; the wiki verifies a **signed JWT** carried in a cookie ([ADR-0005](../adrs/0005-auth-delegated-to-sso.md)).
@@ -55,4 +67,4 @@ Authentication is delegated to the SSO app; the wiki verifies a **signed JWT** c
 
 ## 7. Security testing (regression)
 
-Automated tests must cover: traversal payloads (`../`, encoded, symlink), git-arg injection (`-`-prefixed filenames), iframe host-allowlist bypass and `srcdoc` rejection, and the dev-auth production 403 guardrail.
+Automated tests must cover: traversal payloads (`../`, encoded, symlink), git-arg injection (`-`-prefixed filenames), iframe host-allowlist bypass and `srcdoc` rejection, **mermaid injection (HTML label / `click` handler / `%%{init}%%` security downgrade)**, and the dev-auth production 403 guardrail.
