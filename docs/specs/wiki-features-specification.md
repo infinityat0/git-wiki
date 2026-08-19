@@ -72,7 +72,7 @@ The wiki must render the following markdown elements using pure, clean CSS selec
 | **Images** | Centered, max-width 100%, rounded corners, captions in small italic text. | 8px border-radius, drop-shadow |
 | **Alerts / Callouts** | Indented box with custom left-border, background color, title, and descriptive icon. | Green (Tip), Blue (Note), Orange (Warning), Red (Danger) |
 | **Embedded iframes** | Raw `<iframe>` in markdown renders as a responsive 16:9 framed embed with a rounded border. **Sandboxed and host-allowlisted** — non-allowlisted sources show a placeholder card with the link instead of a live frame. | Lazy-loaded, `sandbox` forced (see [ADR-0002](../adrs/0002-markdown-rendering-pipeline.md) & security spec) |
-| **Diagrams (Mermaid)** | ` ```mermaid ` fenced blocks render to inline SVG (flowcharts, sequence, etc.), themed to match light/dark. | Lazy-loaded mermaid; centered, max-width 100% |
+| **Diagrams (Mermaid)** | ` ```mermaid ` fenced blocks render to inline SVG — all standard mermaid types (flowchart, sequence, class, state, ER, gantt, pie, gitgraph, etc.), themed to light/dark and **re-rendered on theme toggle**. Rendered under **`securityLevel: strict`** (a client-side sanitize boundary — see [ADR-0002](../adrs/0002-markdown-rendering-pipeline.md) & [security §3.1](security-and-safety.md)); a syntax error yields an isolated inline error card (§10). SVG carries `role="img"` + an accessible `<title>`/label. | Lazy-loaded mermaid; centered, max-width 100% |
 | **Math (KaTeX)** | Inline `$…$` and block `$$…$$` render via KaTeX (CSS-only, no runtime script). | Scrollable if wide |
 
 ### 3.1 Alert/Callout Markdown Syntax
@@ -328,6 +328,7 @@ Driven by the data layer status flags (see [ADR-0004](../adrs/0004-frontend-stat
 | :--- | :--- | :--- | :--- |
 | File tree | Skeleton rows | "No documents yet" with sync hint | Retry banner |
 | Document view | Content skeleton (title + lines) | — | "Couldn't load this doc" + retry; in-app 404 for unknown path |
+| Mermaid diagram | Placeholder box while the lazy chunk + render resolve | — | Inline "Diagram failed to render" card showing the error, **isolated to that block** (never crashes the page) |
 | Search | Spinner in modal; "index warming up" if `searchIndex=building` | "No results for '<q>'" | Inline error row |
 | History drawer | Skeleton list | "No history" | Retry |
 | Sync | Button → spinner "Syncing…" | — | Toast with git error summary (from §6.0), non-blocking |

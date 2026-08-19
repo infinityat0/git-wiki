@@ -114,7 +114,14 @@
       "specLabel": "Diagrams (Mermaid)",
       "fixture": "mermaid.md",
       "visual": true,
-      "assertions": ["```mermaid fence renders inline SVG", "theme matches light/dark", "centered, max-width 100%"]
+      "assertions": [
+        "```mermaid fence renders inline SVG",
+        "theme matches light/dark and re-renders on theme toggle",
+        "centered, max-width 100%",
+        "invalid diagram renders an isolated inline error card without crashing the page",
+        "SVG has role=img and an accessible title/label",
+        "rendered under securityLevel:strict (see security/mermaid-injection)"
+      ]
     },
     {
       "id": "math",
@@ -175,6 +182,11 @@
       "id": "iframe-missing-sandbox",
       "fixture": "security/iframe-missing-sandbox.md",
       "expectBlocked": "rendered iframe carries the forced sandbox value even though the source omitted it"
+    },
+    {
+      "id": "mermaid-injection",
+      "fixture": "security/mermaid-injection.md",
+      "expectBlocked": "mermaid renders under securityLevel:strict — no <script>, on* attrs, foreignObject HTML, or javascript: click/href survive the generated SVG; author %%{init}%% securityLevel downgrade is ignored"
     }
   ]
 }

@@ -182,7 +182,7 @@ Visual treatment for the state matrix in features spec §10.
 ## 7. Embedded Content Styling
 
 - **Iframe embeds**: wrapped in a responsive container (`aspect-ratio: 16 / 9; max-width: 100%`) with `--border-muted` 1px border and `border-radius: 0.5rem`. A disallowed-host embed renders instead as a placeholder card: link icon, the URL as a clickable link, and a muted "External embed not on allowlist" caption.
-- **Mermaid diagrams**: centered SVG, `max-width: 100%`, transparent background; diagram theme variables mapped to the active light/dark palette (edges/text use `--text-secondary`, accents use `--brand-green-*`).
+- **Mermaid diagrams**: centered SVG, `max-width: 100%`, transparent background; diagram theme variables mapped to the active light/dark palette (edges/text use `--text-secondary`, accents use `--brand-green-*`). Diagrams **re-render on theme toggle** (theme is baked into the SVG at render time). While the lazy mermaid chunk loads, show a fixed-height placeholder box (respecting reduced-motion) to avoid layout shift. On a syntax error, render an inline error card (muted warning tint, the mermaid error message in monospace) scoped to that block — the rest of the page renders normally. For accessibility, the SVG gets `role="img"` and an `aria-label`/`<title>` derived from the diagram (or a nearby heading).
 - **Math (KaTeX)**: block math centered with horizontal scroll on overflow; inline math baseline-aligned with body text.
 
 ## 8. Accessibility Styling

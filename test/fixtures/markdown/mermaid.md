@@ -23,3 +23,11 @@ sequenceDiagram
     U->>W: retry with cookie
     W-->>U: rendered doc
 ```
+
+A deliberately invalid diagram — must render an isolated inline error card, NOT crash the page or the other diagrams above:
+
+```mermaid
+flowchart LR
+    A -->
+    this is not valid mermaid syntax {{{
+```
