@@ -1,18 +1,58 @@
 /**
- * @wiki/contracts — shared API contract types.
+ * `@wiki/contracts` — the frozen shared API contract for git-wiki.
  *
- * PLACEHOLDER ONLY. The real payload types (TreeNode, DocResponse,
- * HistoryEntry, SearchResult, AuthMe, HealthResponse, SyncResult, ApiError)
- * and route-path constants are defined by task F2. Do not add real API types
- * here — F2 owns this package's contents going forward.
+ * This package is the single source of truth for every API payload exchanged
+ * between the Express server and the React client. It is **types + small const
+ * maps only** — no runtime logic and no third-party dependencies (types-only;
+ * no zod). See features spec §6 (contracts), §7 (frontmatter/title), §10
+ * (error shape), §12 (authz/canWrite) and ADR-0005 (auth).
  *
- * The single runtime export below exists purely so both `client` and `server`
- * can prove that `@wiki/contracts` resolves (value + type) across the
- * workspace boundary during F1 scaffolding.
+ * Every type here is diff-checked against the JSON examples in features spec §6.
+ * Consumers must import from `@wiki/contracts` rather than redefining locally.
  */
 
-/** Placeholder version marker; replaced/removed when F2 lands. */
-export const contractsVersion = '0.0.0-placeholder';
+export type { ErrorCode, ApiError } from './errors.js';
+export { ERROR_CODES } from './errors.js';
 
-/** Placeholder type; F2 replaces this module's exports with the real contract. */
-export type Placeholder = typeof contractsVersion;
+export type {
+  AuthProvider,
+  SessionUser,
+  AuthMe,
+  DevLoginRequest,
+  DevLoginResponse,
+  LogoutResponse,
+} from './auth.js';
+
+export type { TreeNodeType, TreeNode, TreeResponse } from './tree.js';
+
+export type {
+  DocResponse,
+  HistoryEntry,
+  HistoryResponse,
+  SearchResult,
+  SearchResponse,
+} from './docs.js';
+
+export type {
+  SearchIndexStatus,
+  DocsRepoStatus,
+  HealthResponse,
+  SyncResult,
+} from './health.js';
+
+export { API_ROUTES } from './routes.js';
+export type {
+  ApiRouteKey,
+  ApiRoutePath,
+  DocQuery,
+  HistoryQuery,
+  SearchQuery,
+  AssetQuery,
+} from './routes.js';
+
+/**
+ * Package version marker. Retained from the F1 scaffold so existing consumers
+ * (`client`, `server`) that import it keep resolving unchanged. Value tracks
+ * the package.json version.
+ */
+export const contractsVersion = '0.0.0';

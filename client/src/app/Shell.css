@@ -1,0 +1,97 @@
+/*
+ * Shell layout (Design.md §2). Dimensions come from tokens.css:
+ *   --header-height 3.5rem · --sidebar-width 17rem
+ *   --content-max-width 48rem · --toc-width 15rem
+ *
+ * Only layout concerns live here. Colors reference tokens so both themes work.
+ */
+
+.shell {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* HEADER — sticky, fixed height, frosted glass (§2.1). */
+.shell__header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border-muted);
+  /* Frosted glass: translucent bg + blur. color-mix keeps it theme-aware. */
+  background-color: color-mix(in srgb, var(--bg-primary) 80%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/*
+ * BODY — three-column grid. The sidebar/toc columns are fixed track widths;
+ * the content column takes the rest. minmax(0, …) lets the content shrink so
+ * long code blocks/tables don't blow out the grid.
+ */
+.shell__body {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--toc-width);
+  align-items: start;
+}
+
+/* Sidebars are sticky under the header and independently scrollable. */
+.shell__sidebar,
+.shell__toc {
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+}
+
+.shell__sidebar {
+  border-right: 1px solid var(--border-muted);
+  background-color: var(--bg-secondary);
+}
+
+.shell__toc {
+  border-left: 1px solid var(--border-muted);
+}
+
+/* MAIN — centered reading column capped at --content-max-width (§2.1). */
+.shell__content {
+  min-width: 0; /* allow the grid cell to shrink below content size */
+}
+
+.shell__content-inner {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/*
+ * Tablet (768–1023px): drop the right TOC column (§2.2).
+ */
+@media (max-width: 1023px) {
+  .shell__body {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  }
+
+  .shell__toc {
+    display: none;
+  }
+}
+
+/*
+ * Mobile (<768px): drop the left sidebar too — it becomes a drawer in U1/U5
+ * (F5 only hides the in-flow column here).
+ */
+@media (max-width: 767px) {
+  .shell__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shell__sidebar {
+    display: none;
+  }
+
+  .shell__content-inner {
+    padding: 1.5rem 1rem;
+  }
+}

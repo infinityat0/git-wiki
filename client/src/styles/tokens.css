@@ -1,0 +1,74 @@
+/*
+ * Design tokens — CSS custom properties for the light + dark themes.
+ *
+ * These are the single source of truth for colors, typography, and spacing.
+ * Values are transcribed EXACTLY from docs/designs/Design.md §1. Do not edit
+ * the palette here without updating the design doc (this file is owned by F5
+ * and consumed read-only by every U*/R* task).
+ *
+ * The dark theme is activated by the `.dark` class on <html>, applied by the
+ * theme provider (client/src/theme) before first paint.
+ */
+
+/* Color Palette Variables */
+:root {
+  /* Common Brand Colors */
+  --brand-green-dark: hsl(146, 67%, 26%); /* #166E3F - Primary green */
+  --brand-green-light: hsl(148, 67%, 44%); /* #26BD6C - Vibrant accent green */
+
+  /* Light Theme (Default) */
+  --theme-appearance: light;
+  --bg-primary: hsl(0, 0%, 100%);
+  --bg-secondary: hsl(210, 16%, 98%); /* Light gray for sidebar/panels */
+  --bg-tertiary: hsl(210, 16%, 93%);
+  --text-primary: hsl(215, 25%, 27%); /* Dark slate gray */
+  --text-secondary: hsl(215, 16%, 47%); /* Muted text */
+  --text-accent: var(--brand-green-dark);
+
+  --border-muted: hsl(210, 16%, 93%);
+  --border-active: var(--brand-green-light);
+
+  --code-bg: hsl(210, 16%, 96%);
+  --code-text: hsl(340, 70%, 45%); /* Muted pink for inline code */
+  --code-block-bg: hsl(215, 21%, 11%); /* Always dark code block for high readability */
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+  /* Typography (Design.md §1.2) */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  --font-size-base: 16px; /* 1rem */
+  --line-height-base: 1.75; /* Optimized for long-form reading */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Layout dimensions (Design.md §2.1) */
+  --header-height: 3.5rem; /* 56px */
+  --sidebar-width: 17rem; /* 272px */
+  --content-max-width: 48rem; /* 768px */
+  --toc-width: 15rem; /* 240px */
+}
+
+.dark {
+  /* Dark Theme */
+  --theme-appearance: dark;
+  --bg-primary: hsl(180, 13%, 5%); /* #0a0d0d - Charcoal black */
+  --bg-secondary: hsl(180, 8%, 8%); /* Slightly lighter charcoal */
+  --bg-tertiary: hsl(180, 8%, 14%);
+  --text-primary: hsl(215, 15%, 85%); /* Light slate */
+  --text-secondary: hsl(215, 10%, 60%); /* Muted slate */
+  --text-accent: var(--brand-green-light);
+
+  --border-muted: hsl(180, 8%, 14%);
+  --border-active: var(--brand-green-light);
+
+  --code-bg: hsl(180, 8%, 12%);
+  --code-text: hsl(148, 67%, 44%);
+  --code-block-bg: hsl(180, 8%, 7%);
+}

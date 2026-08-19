@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Shared API contract types for git-wiki (placeholder — F2 defines the real types).",
+  "description": "Frozen shared API contract types for git-wiki (types + route constants; no runtime deps).",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

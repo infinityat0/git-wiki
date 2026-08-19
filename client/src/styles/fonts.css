@@ -1,0 +1,24 @@
+/*
+ * Self-hosted fonts.
+ *
+ * Inter and JetBrains Mono are bundled locally via the @fontsource packages
+ * (their woff2 files live in node_modules and Vite fingerprints + inlines them
+ * into the build). NO network request is made to Google Fonts or any CDN at
+ * runtime — this is a hard requirement so the deterministic visual-regression
+ * baselines (F8 / L3) are reproducible.
+ *
+ * @fontsource static packages expose the family names 'Inter' and
+ * 'JetBrains Mono', matching --font-sans / --font-mono in tokens.css.
+ */
+
+/* Inter — UI, headers & body (weights 400/500/600/700 per Design.md §1.2). */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+/* JetBrains Mono — code (weights 400/500/600/700). */
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/jetbrains-mono/700.css';
