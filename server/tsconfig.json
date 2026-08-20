@@ -5,6 +5,15 @@
     "rootDir": ".",
     "types": ["node"]
   },
-  "include": ["src", "boot", "config", "lib", "routes"],
+  "include": [
+    "src",
+    "boot",
+    "config",
+    "lib",
+    "routes",
+    "search",
+    "auth",
+    "sync"
+  ],
   "exclude": ["dist", "**/*.test.ts"]
 }

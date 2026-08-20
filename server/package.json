@@ -13,6 +13,7 @@
     "@wiki/contracts": "*",
     "dotenv": "^17.4.2",
     "express": "^4.19.2",
+    "jose": "^6.2.9",
     "minisearch": "^7.2.0"
   },
   "devDependencies": {
