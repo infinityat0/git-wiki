@@ -32,4 +32,4 @@ COPY --from=build /app/server/dist ./server/dist
 COPY --from=build /app/server/package.json ./server/package.json
 
 EXPOSE 3000
-CMD ["node", "server/dist/index.js"]
+CMD ["node", "server/dist/src/index.js"]

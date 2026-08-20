@@ -1,35 +1,51 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
-import { contractsVersion } from '@wiki/contracts';
+import { config } from '../config/index.js';
+import { healthRouter } from '../routes/health.js';
+import { treeRouter } from '../routes/tree.js';
+import { bootstrapRepoCache } from '../boot/repo-cache.js';
+import { createGitCredentialProvider } from '../lib/git-credential.js';
 
 const app = express();
-const port = Number(process.env.PORT ?? 3000);
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
-// This file runs from server/dist/index.js, so the built SPA lives two levels
-// up in client/dist. Overridable via CLIENT_DIST for containerized layouts
-// (the real config loader arrives in F3).
+// Built output runs from server/dist/src/index.js, so the built SPA lives three
+// levels up in client/dist. Overridable via CLIENT_DIST for containerized layouts.
 const clientDist =
-  process.env.CLIENT_DIST ?? path.resolve(currentDir, '../../client/dist');
+  process.env.CLIENT_DIST ?? path.resolve(currentDir, '../../../client/dist');
 
 // --- JSON API -------------------------------------------------------------
-// Hello-world only; real endpoints are added by the B* tasks.
-app.get('/api/hello', (_req, res) => {
-  res.json({ message: 'hello world', contractsVersion });
-});
+// Routers register their own absolute `/api/*` paths (mounted before the SPA
+// fallback). More endpoints are added by the remaining B* tasks.
+app.use(healthRouter);
+app.use(treeRouter);
 
 // --- Static SPA -----------------------------------------------------------
 // Serve the built client, then fall back to index.html for any non-API route
-// so client-side routing (deep links) works. Same origin as the API in prod
-// (see ADR-0001).
+// so client-side routing (deep links) works. Same origin as the API in prod.
 app.use(express.static(clientDist));
 
 app.get(/^\/(?!api\/).*/, (_req, res) => {
   res.sendFile(path.join(clientDist, 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`git-wiki server listening on http://localhost:${port}`);
-});
+// --- Startup --------------------------------------------------------------
+// Clone/pull the docs repo (failures are swallowed by bootstrap: the server
+// stays up but "not ready" so the k8s readiness probe holds traffic), then
+// begin listening.
+async function main(): Promise<void> {
+  await bootstrapRepoCache({
+    repoUrl: config.docs.repoUrl,
+    branch: config.docs.repoBranch,
+    cacheDir: config.docs.repoCacheDir,
+    credential: createGitCredentialProvider(config.git),
+  });
+
+  app.listen(config.port, () => {
+    console.log(`git-wiki server listening on http://localhost:${config.port}`);
+  });
+}
+
+void main();
