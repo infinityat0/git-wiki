@@ -7,6 +7,8 @@ import { treeRouter } from '../routes/tree.js';
 import { docRouter } from '../routes/doc.js';
 import { assetRouter } from '../routes/asset.js';
 import { historyRouter } from '../routes/history.js';
+import { searchRouter } from '../routes/search.js';
+import { rebuildSearchIndex } from '../search/index.js';
 import { bootstrapRepoCache } from '../boot/repo-cache.js';
 import { createGitCredentialProvider } from '../lib/git-credential.js';
 
@@ -27,6 +29,7 @@ app.use(treeRouter);
 app.use(docRouter);
 app.use(assetRouter);
 app.use(historyRouter);
+app.use(searchRouter);
 
 // --- Static SPA -----------------------------------------------------------
 // Serve the built client, then fall back to index.html for any non-API route
@@ -48,6 +51,9 @@ async function main(): Promise<void> {
     cacheDir: config.docs.repoCacheDir,
     credential: createGitCredentialProvider(config.git),
   });
+
+  // Build the search index once the docs clone is present (flips readiness → ready).
+  rebuildSearchIndex();
 
   app.listen(config.port, () => {
     console.log(`git-wiki server listening on http://localhost:${config.port}`);
