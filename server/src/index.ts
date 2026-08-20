@@ -6,6 +6,7 @@ import { healthRouter } from '../routes/health.js';
 import { treeRouter } from '../routes/tree.js';
 import { docRouter } from '../routes/doc.js';
 import { assetRouter } from '../routes/asset.js';
+import { historyRouter } from '../routes/history.js';
 import { bootstrapRepoCache } from '../boot/repo-cache.js';
 import { createGitCredentialProvider } from '../lib/git-credential.js';
 
@@ -25,6 +26,7 @@ app.use(healthRouter);
 app.use(treeRouter);
 app.use(docRouter);
 app.use(assetRouter);
+app.use(historyRouter);
 
 // --- Static SPA -----------------------------------------------------------
 // Serve the built client, then fall back to index.html for any non-API route
