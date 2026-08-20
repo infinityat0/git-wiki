@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MdImage — L2 golden snapshot > rendered HTML is stable 1`] = `
+"<div><h1 id="images">Images</h1>
+<p>A relative image (its <code>src</code> must resolve through <code>/api/asset?path=…</code>):</p>
+<p><span class="md-figure" style="display: block; margin: 1.5rem auto; text-align: center;"><img class="md-image" src="/api/asset?path=assets%2Farchitecture.png" alt="Architecture diagram of the wiki" style="display: block; margin: 0px auto; max-width: 100%; height: auto; border-radius: 8px;" loading="lazy"><span class="md-figure-caption" style="display: block; margin-top: 0.5rem; font-size: 0.85em; font-style: italic; opacity: 0.75;">Architecture diagram of the wiki</span></span></p>
+<p><em>Figure 1: caption text renders in small italic below the image.</em></p>
+<p>An absolute image URL is passed through (subject to the CSP image policy):</p>
+<p><span class="md-figure" style="display: block; margin: 1.5rem auto; text-align: center;"><img class="md-image" src="https://vitepress.dev/vitepress-logo-mini.svg" alt="Remote logo" style="display: block; margin: 0px auto; max-width: 100%; height: auto; border-radius: 8px;" loading="lazy"><span class="md-figure-caption" style="display: block; margin-top: 0.5rem; font-size: 0.85em; font-style: italic; opacity: 0.75;">Remote logo</span></span></p></div>"
+`;
