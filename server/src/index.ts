@@ -4,6 +4,8 @@ import express from 'express';
 import { config } from '../config/index.js';
 import { healthRouter } from '../routes/health.js';
 import { treeRouter } from '../routes/tree.js';
+import { docRouter } from '../routes/doc.js';
+import { assetRouter } from '../routes/asset.js';
 import { bootstrapRepoCache } from '../boot/repo-cache.js';
 import { createGitCredentialProvider } from '../lib/git-credential.js';
 
@@ -21,6 +23,8 @@ const clientDist =
 // fallback). More endpoints are added by the remaining B* tasks.
 app.use(healthRouter);
 app.use(treeRouter);
+app.use(docRouter);
+app.use(assetRouter);
 
 // --- Static SPA -----------------------------------------------------------
 // Serve the built client, then fall back to index.html for any non-API route
