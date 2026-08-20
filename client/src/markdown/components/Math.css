@@ -1,0 +1,25 @@
+/*
+ * R3 — KaTeX Math Styling.
+ *
+ * Implements Design.md §7:
+ * - Block math centered with horizontal scroll on overflow
+ * - Inline math baseline-aligned with body text
+ */
+
+@import 'katex/dist/katex.min.css';
+
+/* Block math centered; wide math scrolls horizontally on overflow */
+.katex-display {
+  display: block;
+  margin: 1em 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 0.5em 0;
+}
+
+/* Ensure inline math doesn't break unexpectedly and aligns with text baseline */
+.katex {
+  text-rendering: auto;
+}

@@ -26,6 +26,9 @@ export {
   type MermaidSlotProps,
 } from './components.js';
 
+export { MathStyles } from './components/Math.js';
+import './components/Math.css';
+
 export {
   extractToc,
   createTocCollector,

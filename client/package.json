@@ -16,6 +16,7 @@
     "@wiki/contracts": "*",
     "github-slugger": "^2.0.0",
     "hast-util-to-string": "^3.0.1",
+    "katex": "^0.16.47",
     "mermaid": "^11.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
