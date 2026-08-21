@@ -1,0 +1,320 @@
+/*
+ * U5 — header styling (Design.md §2.1 dimensions, §4.1 theme toggle, §8 a11y).
+ *
+ * Presentation only; consumes F5 design tokens (CSS custom properties) so both
+ * themes work without hard-coded colors. The Shell (F5) owns the header's
+ * placement + fixed height; this fills that slot.
+ */
+
+.header {
+  height: var(--header-height);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  /* Frosted glass (Design.md §2.1): translucent bg + backdrop blur. */
+  background: color-mix(in srgb, var(--bg-primary) 78%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-muted);
+  box-sizing: border-box;
+}
+
+.header__left,
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 0;
+}
+
+.header__right {
+  justify-content: flex-end;
+}
+
+.header__center {
+  flex: 0 1 22rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* -- Logo / repo title ---------------------------------------------------- */
+
+.header__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  font-size: 1.05rem;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.35rem;
+}
+
+.header__logo:hover {
+  color: var(--text-accent);
+}
+
+.header__logo-mark {
+  color: var(--text-accent);
+  flex-shrink: 0;
+}
+
+/* -- Icon-only buttons (shared) ------------------------------------------- */
+
+.header__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.header__icon-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* -- Search trigger ------------------------------------------------------- */
+
+.header__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 22rem;
+  height: 2.25rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--border-muted);
+  border-radius: 0.5rem;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.header__search:hover {
+  border-color: var(--border-active);
+  background: var(--bg-tertiary);
+}
+
+.header__search-icon {
+  flex-shrink: 0;
+}
+
+.header__search-label {
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.header__kbd {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--border-muted);
+  border-radius: 0.35rem;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+/* -- Sync status + button ------------------------------------------------- */
+
+.header__sync-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.header__sync-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--brand-green-light);
+  flex-shrink: 0;
+}
+
+.header__sync-status--syncing .header__sync-dot {
+  background: var(--text-secondary);
+}
+
+.header__sync-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-muted);
+  border-radius: 0.5rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.header__sync-btn:hover:not(:disabled) {
+  border-color: var(--border-active);
+  background: var(--bg-tertiary);
+}
+
+.header__sync-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.header__sync-icon {
+  flex-shrink: 0;
+}
+
+.header__sync-icon--spinning {
+  animation: header-spin 0.9s linear infinite;
+}
+
+@keyframes header-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* -- Theme toggle (Design.md §4.1) ---------------------------------------- */
+
+.header__theme-icons {
+  position: relative;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.header__theme-icon {
+  position: absolute;
+  inset: 0;
+  /* Sun/Moon swap: rotate + scale + fade (Design.md §4.1). */
+  transition:
+    transform 0.5s ease,
+    opacity 0.3s ease;
+}
+
+/* Light theme: show the Moon (invitation to go dark); hide the Sun. */
+.header__theme-icon--sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+.header__theme-icon--moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Dark theme: show the Sun; hide the Moon. */
+.dark .header__theme-icon--sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.dark .header__theme-icon--moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+/* -- Sync-error toast (features spec §10: non-blocking, bottom-right) ------ */
+
+.header__toast {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 50;
+  max-width: 22rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border-muted);
+  border-left: 4px solid var(--brand-green-dark);
+  border-radius: 0.5rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+  font-size: 0.85rem;
+}
+
+.header__toast-text {
+  flex: 1 1 auto;
+  line-height: 1.4;
+}
+
+.header__toast-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.15rem;
+}
+
+.header__toast-close:hover {
+  color: var(--text-primary);
+}
+
+/* -- Responsive (Design.md §2.2) ------------------------------------------ */
+
+/* The mobile menu button only appears once the sidebar collapses (<768px). */
+.header__menu {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .header__menu {
+    display: inline-flex;
+  }
+  /* Collapse verbose right-side affordances to icons on small screens. */
+  .header__sync-status,
+  .header__sync-btn-text {
+    display: none;
+  }
+  .header__center {
+    flex: 1 1 auto;
+  }
+  .header__search-label {
+    display: none;
+  }
+  .header__kbd {
+    display: none;
+  }
+}
+
+/* -- Reduced motion (Design.md §4.3) -------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .header__theme-icon,
+  .header__icon-btn,
+  .header__search,
+  .header__sync-btn {
+    transition-duration: 0.01ms;
+  }
+  .header__sync-icon--spinning {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}
