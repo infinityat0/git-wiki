@@ -176,6 +176,14 @@ export function Mermaid({ code }: MermaidSlotProps) {
         };
         const mermaid = mod.default;
 
+        // mermaid parses colors itself (outside any CSS context), so passing
+        // CSS `var(...)` values throws "Unsupported color format". Resolve the
+        // design tokens to concrete values here — re-read each render so a
+        // theme toggle picks up the new palette.
+        const rootStyle = getComputedStyle(document.documentElement);
+        const cssVar = (name: string, fallback: string): string =>
+          rootStyle.getPropertyValue(name).trim() || fallback;
+
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
@@ -186,11 +194,11 @@ export function Mermaid({ code }: MermaidSlotProps) {
           deterministicIDSeed: 'git-wiki',
           flowchart: { htmlLabels: false },
           themeVariables: {
-            fontFamily: 'var(--font-sans, Inter, system-ui, sans-serif)',
-            lineColor: 'var(--text-secondary)',
-            textColor: 'var(--text-secondary)',
-            primaryColor: 'var(--brand-green-light)',
-            primaryBorderColor: 'var(--brand-green)',
+            fontFamily: cssVar('--font-sans', 'Inter, system-ui, sans-serif'),
+            lineColor: cssVar('--text-secondary', '#64748b'),
+            textColor: cssVar('--text-secondary', '#64748b'),
+            primaryColor: cssVar('--brand-green-light', '#26bd6c'),
+            primaryBorderColor: cssVar('--brand-green-dark', '#166e3f'),
           },
         });
 
