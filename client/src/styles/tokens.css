@@ -4,8 +4,7 @@
  * These are the single source of truth for colors, typography, and spacing.
  * Values are transcribed EXACTLY from docs/designs/Design.md §1. Do not edit
  * the palette here without updating the design doc (this file is owned by F5
- * and consumed read-only by every U*/
-R* task).
+ * and consumed read-only by every U-task and R-task).
  *
  * The dark theme is activated by the `.dark` class on <html>, applied by the
  * theme provider (client/src/theme) before first paint.
