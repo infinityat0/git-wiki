@@ -1,0 +1,81 @@
+/*
+ * U2 — right table-of-contents chrome (Design.md §2).
+ *
+ * Colors, spacing, and typography reference tokens.css so both themes work.
+ * The sticky column + below-1024px hiding are provided by the Shell's
+ * `.shell__toc` zone (F5); the media query here mirrors that breakpoint so the
+ * component still hides on narrow viewports when mounted outside the Shell.
+ */
+
+.toc {
+  padding: 1.5rem 1rem 2rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.toc__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* A subtle rail on the left edge of the list. */
+  border-inline-start: 1px solid var(--border-muted);
+}
+
+.toc__item[data-depth='3'] {
+  padding-inline-start: 0.75rem;
+}
+
+.toc__link {
+  display: block;
+  padding: 0.25rem 0.75rem;
+  margin-inline-start: -1px; /* overlap the list rail so the active bar aligns */
+  border-inline-start: 2px solid transparent;
+  color: var(--text-secondary);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.toc__link:hover {
+  color: var(--text-primary);
+}
+
+.toc__link--active {
+  color: var(--text-accent);
+  border-inline-start-color: var(--border-active);
+  /* Weight bump without a width shift (matches the sidebar active trick). */
+  font-weight: var(--font-weight-medium);
+  text-shadow: 0.2px 0 0 currentColor;
+}
+
+.toc__link:focus-visible {
+  outline: 2px solid var(--border-active);
+  outline-offset: -2px;
+  border-radius: 2px;
+}
+
+/* Mirror the Shell breakpoint: no right TOC below the desktop layout. */
+@media (max-width: 1023px) {
+  .toc {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc__link {
+    transition: none;
+  }
+}
