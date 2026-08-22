@@ -1,0 +1,8 @@
+/*
+ * Styles barrel — the single stylesheet the app imports.
+ *
+ * Order matters: fonts + tokens define the variables that global.css consumes.
+ */
+@import './fonts.css';
+@import './tokens.css';
+@import './global.css';

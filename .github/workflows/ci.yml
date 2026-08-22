@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Typecheck · Lint · Test · Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  visual:
+    name: Playwright L3 (visual regression)
+    runs-on: ubuntu-latest
+    # Run inside the SAME pinned Playwright image the baselines were generated
+    # with, so font rasterization matches the committed screenshots exactly.
+    # Keep this tag in lockstep with the pinned @playwright/test version.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install
+        run: npm ci
+
+      - name: Playwright visual tests
+        # The config's webServer boots the Vite harness; baselines under
+        # test/visual/__screenshots__ are diffed here (never auto-updated).
+        run: npx playwright test
+
+      - name: Upload diff artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

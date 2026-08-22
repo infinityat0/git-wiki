@@ -7,3 +7,6 @@ dist/
 repo-cache/
 
 # NOTE: docs/ (our ADRs, specs, designs, plans) IS tracked — do not ignore it.
+
+# Agent worktrees / local Claude state
+.claude/

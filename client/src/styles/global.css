@@ -1,0 +1,76 @@
+/*
+ * Global base styles.
+ *
+ * Applies the design tokens to the document, sets long-form reading defaults,
+ * the global accessibility focus ring (Design.md §8), the reduced-motion
+ * escape hatch (§4.3), and print rules (§9). Zone-specific styling lives with
+ * the U*/
+R* tasks that own each zone — keep this file to document-wide concerns. */ *,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--font-size-base);
+  /* Smooth the light/dark swap; disabled under reduced-motion below. */
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-base);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+}
+
+/*
+ * Global visible focus ring (Design.md §8). Never remove an outline without a
+ * replacement — :focus-visible only shows it for keyboard/AT users.
+ */
+:focus-visible {
+  outline: 2px solid var(--border-active);
+  outline-offset: 2px;
+}
+
+/*
+ * Reduced motion (Design.md §4.3). Collapse all animation + transition to
+ * near-instant so the theme swap, drawers, and hover effects are calm.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print (Design.md §9): full-width, high-contrast content; chrome hidden. */
+@media print {
+  :root {
+    --bg-primary: #fff;
+    --text-primary: #000;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

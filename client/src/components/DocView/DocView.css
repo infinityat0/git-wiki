@@ -1,0 +1,90 @@
+/*
+ * U3 — content view + async-state styling (features spec §10).
+ *
+ * Presentation only; consumes F5 design tokens (CSS custom properties) rather
+ * than hard-coded colors so light/dark themes both work. No layout ownership —
+ * the Shell (F5) owns the content column; this styles what fills it.
+ */
+
+.docview {
+  min-width: 0;
+}
+
+/* -- Loading skeleton (title + lines) ------------------------------------- */
+
+.docview-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.docview-skeleton__bar {
+  height: 0.85rem;
+  border-radius: 6px;
+  background: var(--color-border, rgba(128, 128, 128, 0.25));
+  animation: docview-pulse 1.4s ease-in-out infinite;
+}
+
+.docview-skeleton__bar--title {
+  height: 1.8rem;
+  width: 55%;
+  margin-bottom: 0.6rem;
+}
+
+@keyframes docview-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .docview-skeleton__bar {
+    animation: none;
+  }
+}
+
+/* -- Error + 404 states ---------------------------------------------------- */
+
+.docview-status {
+  max-width: 40rem;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+.docview-status__code {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  color: var(--color-text-muted, rgba(128, 128, 128, 0.9));
+}
+
+.docview-status__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.docview-status__detail {
+  color: var(--color-text-muted, rgba(128, 128, 128, 0.9));
+  margin: 0 0 1.25rem;
+  word-break: break-word;
+}
+
+.docview-status__retry {
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, rgba(128, 128, 128, 0.4));
+  background: var(--color-surface, transparent);
+  color: inherit;
+}
+
+.docview-status__retry:hover {
+  border-color: var(--color-accent, currentColor);
+}

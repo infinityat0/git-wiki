@@ -1,0 +1,23 @@
+/*
+ * F8 — L3 determinism stylesheet (testing-markdown-rendering.md §Determinism).
+ *
+ * The Playwright config already forces `prefers-reduced-motion: reduce` (which
+ * global.css honors) and a fixed viewport + deviceScaleFactor. This sheet is the
+ * belt-and-suspenders: it hard-zeroes any remaining animation/transition and
+ * hides the text caret so screenshots never flake on in-flight motion.
+ */
+*,
+*::before,
+*::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+  caret-color: transparent !important;
+}
+
+/* A stable reading frame for the rendered fixture. */
+.markdown-body {
+  max-width: var(--content-max-width, 48rem);
+  margin: 0 auto;
+  padding: 2rem;
+}

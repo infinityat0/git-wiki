@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`R5 — L2 golden snapshot > iframes fixture rendered HTML is stable 1`] = `
+"<div><h1 id="embedded-iframes-allowlisted">Embedded iframes (allowlisted)</h1>
+<p>A YouTube (nocookie) embed from an allowlisted host — must render as a live, sandboxed, lazy-loaded iframe wrapped in a responsive 16:9 container:</p>
+<div class="iframe-embed-container" data-iframe-embed="true" style="position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--border-muted); border-radius: 0.5rem; overflow: hidden;"><iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" class="iframe-embed" title="Demo video" width="560" height="315" allow="encrypted-media" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0px;"></iframe></div>
+<p>A CodeSandbox embed (also allowlisted):</p>
+<div class="iframe-embed-container" data-iframe-embed="true" style="position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--border-muted); border-radius: 0.5rem; overflow: hidden;"><iframe src="https://codesandbox.io/embed/react-new" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" class="iframe-embed" title="Live example" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0px;"></iframe></div>
+<p>Notes for assertions:</p>
+<ul>
+<li>The rendered iframes must carry a forced <code>sandbox</code> attribute (e.g. <code>allow-scripts allow-same-origin allow-popups</code>).</li>
+<li>The rendered iframes must carry <code>loading="lazy"</code>.</li>
+<li>Disallowed-host and <code>srcdoc</code> cases live in <code>security/</code> — they must NOT render as live frames.</li>
+</ul></div>"
+`;
