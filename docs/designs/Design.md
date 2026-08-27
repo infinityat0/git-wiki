@@ -20,13 +20,13 @@ We define our design system using CSS custom properties (`:root`) for light and 
   /* Light Theme (Default) */
   --theme-appearance: light;
   --bg-primary: hsl(0, 0%, 100%);
-  --bg-secondary: hsl(210, 16%, 98%);       /* Light gray for sidebar/panels */
-  --bg-tertiary: hsl(210, 16%, 93%);
+  --bg-secondary: hsl(214, 22%, 97%);       /* Cool tint for sidebar/panels */
+  --bg-tertiary: hsl(214, 18%, 92%);
   --text-primary: hsl(215, 25%, 27%);       /* Dark slate gray */
   --text-secondary: hsl(215, 16%, 47%);     /* Muted text */
   --text-accent: var(--brand-green-dark);
   
-  --border-muted: hsl(210, 16%, 93%);
+  --border-muted: hsl(214, 16%, 88%);
   --border-active: var(--brand-green-light);
 
   --code-bg: hsl(210, 16%, 96%);
