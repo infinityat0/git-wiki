@@ -21,7 +21,7 @@
  * slot) it is a plain in-flow navigation column.
  */
 
-import { useCallback, useEffect, type CSSProperties } from 'react';
+import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import type { TreeNode, TreeResponse } from '@wiki/contracts';
 import { useTree } from '../../hooks/useTree.js';
@@ -73,15 +73,55 @@ function orderedVisible(nodes: readonly TreeNode[]): TreeNode[] {
     });
 }
 
+/** Directory paths that are ancestors of a doc path (for auto-expansion). */
+function ancestorDirs(path: string): string[] {
+  const segs = path.split('/').filter(Boolean);
+  const dirs: string[] = [];
+  for (let i = 1; i < segs.length; i += 1)
+    dirs.push(segs.slice(0, i).join('/'));
+  return dirs;
+}
+
+/** Disclosure chevron; rotated to point down when its folder is expanded. */
+function Chevron() {
+  return (
+    <svg
+      className="sidebar__chevron"
+      width="12"
+      height="12"
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+    >
+      <path
+        d="M6 4l4 4-4 4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 interface TreeLevelProps {
   nodes: readonly TreeNode[];
   depth: number;
   activePath: string;
+  expanded: ReadonlySet<string>;
+  onToggle: (path: string) => void;
   onNavigate?: () => void;
 }
 
 /** One nested `<ul>` level of the tree, rendered recursively. */
-function TreeLevel({ nodes, depth, activePath, onNavigate }: TreeLevelProps) {
+function TreeLevel({
+  nodes,
+  depth,
+  activePath,
+  expanded,
+  onToggle,
+  onNavigate,
+}: TreeLevelProps) {
   const visible = orderedVisible(nodes);
   if (visible.length === 0) return null;
 
@@ -90,19 +130,27 @@ function TreeLevel({ nodes, depth, activePath, onNavigate }: TreeLevelProps) {
       {visible.map((node) =>
         node.type === 'directory' ? (
           <li key={node.path} className="sidebar__group">
-            <div
+            <button
+              type="button"
               className="sidebar__group-header"
               style={indentStyle(depth)}
               title={node.title}
+              aria-expanded={expanded.has(node.path)}
+              onClick={() => onToggle(node.path)}
             >
+              <Chevron />
               <span className="sidebar__label">{node.title}</span>
-            </div>
-            <TreeLevel
-              nodes={node.children ?? []}
-              depth={depth + 1}
-              activePath={activePath}
-              onNavigate={onNavigate}
-            />
+            </button>
+            {expanded.has(node.path) ? (
+              <TreeLevel
+                nodes={node.children ?? []}
+                depth={depth + 1}
+                activePath={activePath}
+                expanded={expanded}
+                onToggle={onToggle}
+                onNavigate={onNavigate}
+              />
+            ) : null}
           </li>
         ) : (
           <li key={node.path}>
@@ -147,6 +195,27 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const activePath = routeToDocPath(location.pathname);
 
+  // Folders start collapsed (the tree can be large); the ancestors of the
+  // active doc auto-expand so the current page is always revealed.
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(
+    () => new Set(ancestorDirs(activePath)),
+  );
+  useEffect(() => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      for (const dir of ancestorDirs(activePath)) next.add(dir);
+      return next;
+    });
+  }, [activePath]);
+  const onToggle = useCallback((path: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(path)) next.delete(path);
+      else next.add(path);
+      return next;
+    });
+  }, []);
+
   const tree = useTree();
   const status = deriveAsyncStatus<TreeResponse>(tree, isTreeEmpty);
 
@@ -185,6 +254,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         nodes={tree.data ?? []}
         depth={0}
         activePath={activePath}
+        expanded={expanded}
+        onToggle={onToggle}
         onNavigate={onNavigate}
       />
     );

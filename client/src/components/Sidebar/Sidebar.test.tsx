@@ -102,13 +102,23 @@ function stubTree(body: TreeResponse): void {
   );
 }
 
+/**
+ * Folders start collapsed (auto-expanding only the active doc's ancestors), so
+ * tests that inspect nested entries expand the group first by clicking its
+ * header button.
+ */
+async function expandGroup(name: string): Promise<void> {
+  fireEvent.click(await screen.findByRole('button', { name }));
+}
+
 describe('titles, not filenames (features spec §7)', () => {
   test('renders resolved titles and never the raw filename', async () => {
     stubTree(tree);
     renderSidebar('/');
+    await expandGroup('Decisions');
 
     // Titles are shown…
-    expect(await screen.findByText('Architecture Overview')).not.toBeNull();
+    expect(screen.getByText('Architecture Overview')).not.toBeNull();
     expect(screen.getByText('Frontend State')).not.toBeNull();
     expect(screen.getByText('Home')).not.toBeNull();
 
@@ -121,6 +131,7 @@ describe('titles, not filenames (features spec §7)', () => {
   test('shows the full title as a tooltip on the link', async () => {
     stubTree(tree);
     renderSidebar('/');
+    await expandGroup('Decisions');
 
     const link = await screen.findByRole('link', {
       name: 'Architecture Overview',
@@ -139,17 +150,39 @@ describe('titles, not filenames (features spec §7)', () => {
   test('drops hidden nodes from the tree', async () => {
     stubTree(tree);
     renderSidebar('/');
-    await screen.findByText('Architecture Overview');
+    await expandGroup('Decisions');
+    expect(screen.getByText('Architecture Overview')).not.toBeNull();
     expect(screen.queryByText('Secret')).toBeNull();
   });
 
   test('orders siblings by `order` ascending', async () => {
     stubTree(tree);
     renderSidebar('/');
-    await screen.findByText('Architecture Overview');
+    await expandGroup('Decisions');
     const links = screen.getAllByRole('link').map((el) => el.textContent);
     // Home (order 1, root) then the adr group in order: Architecture, Frontend.
     expect(links).toEqual(['Home', 'Architecture Overview', 'Frontend State']);
+  });
+});
+
+describe('collapsible folders', () => {
+  test('folders start collapsed and expand on click', async () => {
+    stubTree(tree);
+    renderSidebar('/');
+    const header = await screen.findByRole('button', { name: 'Decisions' });
+    expect(header.getAttribute('aria-expanded')).toBe('false');
+    expect(screen.queryByText('Architecture Overview')).toBeNull();
+
+    await expandGroup('Decisions');
+    expect(header.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText('Architecture Overview')).not.toBeNull();
+  });
+
+  test('auto-expands the ancestors of the active doc', async () => {
+    stubTree(tree);
+    renderSidebar('/adr/0001-architecture-overview');
+    // No manual expand: the active doc is revealed by ancestor auto-expansion.
+    expect(await screen.findByText('Architecture Overview')).not.toBeNull();
   });
 });
 
@@ -211,7 +244,8 @@ describe('async states (features spec §10)', () => {
     expect(await screen.findByTestId('sidebar-error')).not.toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
 
-    expect(await screen.findByText('Architecture Overview')).not.toBeNull();
+    await expandGroup('Decisions');
+    expect(screen.getByText('Architecture Overview')).not.toBeNull();
     await waitFor(() =>
       expect(screen.queryByTestId('sidebar-error')).toBeNull(),
     );
@@ -224,7 +258,7 @@ describe('mobile drawer props', () => {
     const onClose = vi.fn();
     renderSidebar('/', { isOpen: true, onClose });
 
-    await screen.findByText('Architecture Overview');
+    await expandGroup('Decisions');
 
     const backdrop = document.querySelector('.sidebar__backdrop');
     expect(backdrop).not.toBeNull();
@@ -244,7 +278,7 @@ describe('mobile drawer props', () => {
     stubTree(tree);
     const onClose = vi.fn();
     renderSidebar('/', { isOpen: true, onClose });
-    await screen.findByText('Architecture Overview');
+    await screen.findByText('Decisions');
 
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(onClose).toHaveBeenCalledTimes(1);
