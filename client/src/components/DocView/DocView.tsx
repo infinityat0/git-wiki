@@ -29,6 +29,7 @@ import { useInternalLinkNav } from '../../routes/useInternalLinkNav.js';
 import { useDocSlots } from './slots.js';
 import { DocSkeleton, DocNotFound, DocError } from './DocStates.js';
 import './DocView.css';
+import './markdown-prose.css';
 
 export interface DocViewProps {
   /**
@@ -116,7 +117,12 @@ export function DocView({ onTocChange }: DocViewProps) {
     body = <DocSkeleton />;
   } else {
     body = (
-      <Markdown content={content} slots={slots} onTocChange={onTocChange} />
+      <Markdown
+        className="markdown-body"
+        content={content}
+        slots={slots}
+        onTocChange={onTocChange}
+      />
     );
   }
 
