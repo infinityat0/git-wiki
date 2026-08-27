@@ -82,12 +82,11 @@
 /* -- Inline code ---------------------------------------------------------- */
 .markdown-body code {
   font-family: var(--font-mono);
-  font-size: 0.875em;
+  font-size: 0.85em;
   background: var(--code-bg);
   color: var(--code-text);
-  padding: 0.15em 0.4em;
-  border-radius: 0.25rem;
-  border: 1px solid var(--border-muted);
+  padding: 0.12em 0.38em;
+  border-radius: 0.3rem;
 }
 /* Reset for code inside the R1 highlighted code block (it owns its own look). */
 .markdown-body pre code {

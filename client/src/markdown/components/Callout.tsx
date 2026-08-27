@@ -256,9 +256,10 @@ export function Callout({ type, title, children }: CalloutSlotProps) {
       data-callout={normalizedType}
       data-callout-title={displayTitle}
       style={{
+        border: `1px solid color-mix(in srgb, ${config.borderColor} 22%, transparent)`,
         borderLeft: `4px solid ${config.borderColor}`,
         backgroundColor: `var(--callout-bg-${normalizedType}, ${config.bgLight})`,
-        borderRadius: '0.375rem',
+        borderRadius: '0.5rem',
         margin: '1.25rem 0',
         padding: '1rem 1.25rem',
       }}
