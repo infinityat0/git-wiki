@@ -124,7 +124,12 @@ export function createHistoryRouter(
   options: HistoryRouterOptions = {},
 ): Router {
   const router = Router();
-  const getRootDir = options.getRootDir ?? (() => config.docs.repoCacheDir);
+  // Resolve to an absolute path: it is passed as BOTH `git -C <dir>` and the
+  // child `cwd`. If it were left relative (config default is `./repo-cache`),
+  // git would resolve `-C ./repo-cache` against that same relative cwd and look
+  // for `repo-cache/repo-cache`, failing every history lookup.
+  const getRootDir =
+    options.getRootDir ?? (() => path.resolve(config.docs.repoCacheDir));
   const runGit = options.runGit ?? defaultRunGit;
   const defaultLimit = options.defaultLimit ?? DEFAULT_HISTORY_LIMIT;
   const maxLimit = options.maxLimit ?? MAX_HISTORY_LIMIT;

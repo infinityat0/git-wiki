@@ -35,7 +35,9 @@ import {
   SearchIcon,
   SunIcon,
   SyncIcon,
+  HistoryIcon,
 } from './icons.js';
+import { UserChip } from '../Auth/index.js';
 import './Header.css';
 
 export interface HeaderProps {
@@ -45,6 +47,11 @@ export interface HeaderProps {
    * when omitted the button is inert but still present + labelled.
    */
   onMenuClick?: () => void;
+  /**
+   * Called when the History button is pressed. The integrator wires this to the
+   * git-history drawer (U6) for the current document. Omit to hide the button.
+   */
+  onHistoryClick?: () => void;
 }
 
 /** Best-effort human summary of a sync failure for the toast (features spec §10). */
@@ -53,7 +60,7 @@ function syncErrorMessage(error: unknown): string {
   return 'Sync failed. Please try again.';
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({ onMenuClick, onHistoryClick }: HeaderProps) {
   const { isDark, toggle } = useTheme();
   const openSearch = useSearchStore((s) => s.openSearch);
   const health = useHealth();
@@ -146,6 +153,17 @@ export function Header({ onMenuClick }: HeaderProps) {
           </span>
         </button>
 
+        {onHistoryClick ? (
+          <button
+            type="button"
+            className="header__icon-btn header__history-btn"
+            aria-label="Document history"
+            onClick={onHistoryClick}
+          >
+            <HistoryIcon />
+          </button>
+        ) : null}
+
         <button
           type="button"
           className="header__icon-btn header__theme-toggle"
@@ -158,6 +176,8 @@ export function Header({ onMenuClick }: HeaderProps) {
             <MoonIcon className="header__theme-icon header__theme-icon--moon" />
           </span>
         </button>
+
+        <UserChip />
       </div>
 
       {showToast && (

@@ -1,15 +1,16 @@
 import './styles/index.css';
 import { useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, useLocation } from 'react-router-dom';
 import { DataProvider } from './api/DataProvider';
 import { ThemeProvider } from './theme';
 import { Shell } from './app/Shell';
-import { AppRoutes } from './routes';
+import { AppRoutes, routeToDocPath } from './routes';
 import type { TocEntry } from './markdown';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Toc } from './components/Toc';
 import { SearchModal } from './components/SearchModal';
+import { HistoryDrawer } from './components/HistoryDrawer';
 import { useHydrateAuth } from './hooks';
 
 // Inner shell — lives inside DataProvider/Router/Theme so hooks resolve.
@@ -20,11 +21,18 @@ function AppShell() {
 
   const [toc, setToc] = useState<TocEntry[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const docPath = routeToDocPath(useLocation().pathname);
 
   return (
     <>
       <Shell
-        header={<Header onMenuClick={() => setSidebarOpen(true)} />}
+        header={
+          <Header
+            onMenuClick={() => setSidebarOpen(true)}
+            onHistoryClick={() => setHistoryOpen(true)}
+          />
+        }
         sidebar={<Sidebar />}
         toc={<Toc entries={toc} />}
       >
@@ -36,6 +44,13 @@ function AppShell() {
 
       {/* Global search overlay — renders nothing until the store opens. */}
       <SearchModal />
+
+      {/* Git-history drawer for the current document (opened from the header). */}
+      <HistoryDrawer
+        isOpen={historyOpen}
+        path={docPath}
+        onClose={() => setHistoryOpen(false)}
+      />
     </>
   );
 }

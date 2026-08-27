@@ -5,6 +5,7 @@ dist/
 
 # Docs *content* to render is a separate repo, cloned here at runtime — never commit it.
 repo-cache/
+repo-cache-backups/
 
 # NOTE: docs/ (our ADRs, specs, designs, plans) IS tracked — do not ignore it.
 
