@@ -1,0 +1,25 @@
+# Build context excludes — keep the image build fast and reproducible.
+node_modules
+**/node_modules
+.git
+.github
+.claude
+dist
+**/dist
+client/dist
+server/dist
+coverage
+playwright-report
+test-results
+
+# Docs *content* clone + local backups — never part of the app image
+# (mounted at runtime via a volume; see deployment-kubernetes.md).
+repo-cache
+repo-cache-backups
+
+# Local env / editor cruft
+.env
+.env.*
+!.env.example
+.DS_Store
+scripts

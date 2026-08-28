@@ -10,19 +10,21 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-COPY packages/contracts/package.json ./packages/contracts/
-COPY client/package.json ./client/
-COPY server/package.json ./server/
-RUN npm ci
-
+# Copy the whole source before install: @wiki/contracts has a `prepare` script
+# (tsc) that npm runs during `npm ci`, so its source must already be present.
+# .dockerignore keeps the context lean (no node_modules/.git/repo-cache).
 COPY . .
+RUN npm ci
 RUN npm run build
 
 # --- runtime stage --------------------------------------------------------
 FROM node:20-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
+
+# git is a runtime dependency: the server clones/pulls the docs repo and shells
+# out to `git log`/`git pull` for history and sync.
+RUN apk add --no-cache git
 
 # Full node_modules + built workspaces (D1 will prune to production deps).
 COPY --from=build /app/node_modules ./node_modules
