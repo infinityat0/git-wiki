@@ -30,7 +30,7 @@ We define our design system using CSS custom properties (`:root`) for light and 
   --border-active: var(--brand-green-light);
 
   --code-bg: hsl(210, 16%, 96%);
-  --code-text: hsl(340, 70%, 45%);          /* Muted pink for inline code */
+  --code-text: hsl(151, 42%, 30%);          /* Muted green — distinct from link accent */
   --code-block-bg: hsl(215, 21%, 11%);      /* Always dark code block for high readability */
   
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -51,7 +51,7 @@ We define our design system using CSS custom properties (`:root`) for light and 
   --border-active: var(--brand-green-light);
 
   --code-bg: hsl(180, 8%, 12%);
-  --code-text: hsl(148, 67%, 44%);
+  --code-text: hsl(151, 40%, 62%);
   --code-block-bg: hsl(180, 8%, 7%);
 }
 ```
